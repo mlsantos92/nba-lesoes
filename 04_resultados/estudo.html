@@ -1,0 +1,380 @@
+<title>Lesões na NBA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: artigo em uma coluna (máx. 880px), seções numeradas pela ordem real do estudo, gráficos em SVG desenhados a partir dos resultados */
+:root {
+  --bg: #F4F6F8; --surface: #FFFFFF; --ink: #15202B; --muted: #566270; --line: #D9DFE6; --soft: #E9EDF1;
+  --blue: #2F5D9E; --orange: #D2601A; --neutral: #C9D0D8;
+  --ok-bg: #E2F1E7; --ok-fg: #1E6B3A; --mid-bg: #FBEEDC; --mid-fg: #8A4B0F; --no-bg: #ECEFF3; --no-fg: #4A5563;
+  --f-display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0E141B; --surface: #151E28; --ink: #E5EAF0; --muted: #9AA6B3; --line: #2A3643; --soft: #1D2834;
+  --blue: #5B8BD6; --orange: #D46A2C; --neutral: #3A4654;
+  --ok-bg: #173323; --ok-fg: #8FD3A6; --mid-bg: #3A2814; --mid-fg: #F2B77F; --no-bg: #222C37; --no-fg: #AEB8C3; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0E141B; --surface: #151E28; --ink: #E5EAF0; --muted: #9AA6B3; --line: #2A3643; --soft: #1D2834;
+  --blue: #5B8BD6; --orange: #D46A2C; --neutral: #3A4654;
+  --ok-bg: #173323; --ok-fg: #8FD3A6; --mid-bg: #3A2814; --mid-fg: #F2B77F; --no-bg: #222C37; --no-fg: #AEB8C3; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.1; margin: 0 }
+h1 { font-size: clamp(40px, 7vw, 64px); font-weight: 700; letter-spacing: -0.01em }
+h2 { font-size: 32px; font-weight: 600; display: flex; gap: 12px; align-items: baseline }
+h2 .n { font-family: var(--f-mono); font-size: 14px; color: var(--orange); font-weight: 500; letter-spacing: .04em }
+h3 { font-size: 22px; font-weight: 600 }
+p { margin: 0; max-width: 68ch }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted) }
+.lede { font-size: 19px; color: var(--muted); max-width: 62ch }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-family: var(--f-mono); font-size: 13px; color: var(--muted) }
+.meta b { color: var(--ink); font-weight: 500 }
+header.hero { display: grid; gap: 18px; padding-bottom: 32px; border-bottom: 2px solid var(--ink) }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; padding: 14px 0 0 }
+nav.toc a { color: var(--muted); text-decoration: none } nav.toc a:hover, nav.toc a:focus-visible { color: var(--ink); text-decoration: underline }
+section { display: grid; gap: 18px; padding-top: 48px }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: grid; gap: 12px; min-width: 0 }
+.resumo { display: grid; gap: 0; border-top: 1px solid var(--line) }
+.resumo li { list-style: none; display: grid; grid-template-columns: 112px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line) }
+.resumo ul { margin: 0; padding: 0 }
+.resumo .big { font-family: var(--f-display); font-size: 34px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums }
+.resumo .big.o { color: var(--orange) } .resumo .big.b { color: var(--blue) }
+.tbl { overflow-x: auto; min-width: 0 }
+table { border-collapse: collapse; width: 100%; font-size: 14px }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top }
+th { font-weight: 600; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted) }
+td.num, th.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap }
+.pill.ok { background: var(--ok-bg); color: var(--ok-fg) } .pill.mid { background: var(--mid-bg); color: var(--mid-fg) } .pill.no { background: var(--no-bg); color: var(--no-fg) }
+ol.flow { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; counter-reset: s }
+ol.flow li { list-style: none; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-size: 14px; display: grid; gap: 6px; align-content: start; counter-increment: s }
+ol.flow li::before { content: "Etapa " counter(s); font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--orange) }
+ol.flow b { font-size: 15px }
+ol.flow .k { font-family: var(--f-mono); font-size: 12px; color: var(--muted) }
+.chart { width: 100%; overflow-x: auto } .chart svg { display: block; width: 100%; height: auto; min-width: 520px }
+.chart svg text { font-family: var(--f-body); fill: var(--muted); font-size: 12px } .chart svg text.ink { fill: var(--ink) } .chart svg text.v { font-family: var(--f-mono); font-size: 11px }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted) }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px }
+.cap { font-size: 13px; color: var(--muted); max-width: 72ch }
+.take { border-left: 3px solid var(--orange); padding: 2px 0 2px 14px; font-weight: 500; max-width: 68ch }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px }
+.stat { font-family: var(--f-display); font-size: 40px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums }
+.small { font-size: 14px; color: var(--muted) }
+ul.list { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 70ch }
+code, .mono { font-family: var(--f-mono); font-size: 13px }
+pre.tree { background: var(--soft); border-radius: 8px; padding: 16px; overflow-x: auto; font-family: var(--f-mono); font-size: 13px; line-height: 1.55; margin: 0 }
+#tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 13px; padding: 7px 10px; border-radius: 6px; max-width: 260px; z-index: 20; line-height: 1.4 }
+footer { padding-top: 48px; font-size: 13px; color: var(--muted); display: grid; gap: 4px }
+a { color: var(--blue) }
+@media (max-width: 520px) { .resumo li { grid-template-columns: 1fr; gap: 4px } h2 { font-size: 27px } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <span class="eyebrow">Estudo de caso · ciência de dados aplicada ao esporte</span>
+  <h1>O que faz um jogador da NBA se lesionar?</h1>
+  <p class="lede">Uma investigação com 20 temporadas de box scores e registros da lista de lesionados. Testei seis hipóteses comuns entre técnicos e torcedores, com modelos que comparam cada jogador com ele mesmo e separam tendência histórica de efeito real.</p>
+  <div class="meta"><span><b>2006-07 a 2025-26</b> temporadas</span><span><b>10.659</b> lesões com jogo perdido</span><span><b>392.257</b> jogador-jogos</span><span><b>Python</b> · pandas · statsmodels · scikit-learn</span></div>
+  <nav class="toc" aria-label="Seções">
+    <a href="#resumo">Resumo</a><a href="#dados">Dados</a><a href="#alvo">Variável de lesão</a><a href="#metodos">Métodos</a><a href="#tempo">Tendência</a><a href="#recorrencia">Recorrência</a><a href="#uso">Uso</a><a href="#estilo">Estilo</a><a href="#jogo">Jogo da lesão</a><a href="#limites">Limitações</a><a href="#proximos">Próximos passos</a>
+  </nav>
+</header>
+
+<section id="resumo">
+  <h2><span class="n">01</span>Hipóteses e resultados</h2>
+  <p>Cada hipótese virou uma pergunta mensurável, com uma unidade de análise e um modelo. O quadro resume o que os dados sustentam depois dos controles.</p>
+  <div class="tbl box" style="padding:6px 14px">
+    <table>
+      <thead><tr><th>Hipótese</th><th>Resultado</th><th>Evidência principal</th></tr></thead>
+      <tbody>
+        <tr><td>Lesão anterior aumenta o risco no mesmo local</td><td><span class="pill ok">Confirmada</span></td><td>Risco vai de 4,2% para 16,1% por temporada (odds ratio 2,1 com controles); 67% das recorrências no mesmo lado</td></tr>
+        <tr><td>Semana com minutos acima do normal aumenta o risco</td><td><span class="pill ok">Confirmada</span></td><td>Jogo &gt; 2 DP de minutos nos 7 dias anteriores: +20%; &gt; 1 DP: +12%; prorrogação: +21%</td></tr>
+        <tr><td>Estilo de jogo muda o risco e o tipo de lesão</td><td><span class="pill mid">Parcial</span></td><td>Só os estilos de garrafão têm risco maior (Pivô de aro +34%, Interno +19%); o estilo muda mais o tipo de lesão do que o total</td></tr>
+        <tr><td>Defesa física do adversário causa mais lesões</td><td><span class="pill mid">Parcial</span></td><td>Sem efeito no total (+1,6% por DP); musculares +8% e fraturas +19% por DP</td></tr>
+        <tr><td>Uso alto (usage rate) leva a mais lesões</td><td><span class="pill no">Não sustentada</span></td><td>+0,28 pp de jogos perdidos por ponto de uso; cai para 0,14 (p = 0,19) ao controlar o histórico</td></tr>
+        <tr><td>Times de ritmo rápido têm mais lesões</td><td><span class="pill no">Não sustentada</span></td><td>Correlação bruta de 0,52 vem da tendência da liga; dentro da temporada é −0,04</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="dados">
+  <h2><span class="n">02</span>Dados e preparação</h2>
+  <p>A maior parte do trabalho foi tornar os dados confiáveis. Os box scores públicos tinham jogos faltando, linhas duplicadas e valores divergentes das súmulas oficiais; a lista de lesionados vem de uma fonte que precisou ser ligada aos jogadores por nome.</p>
+  <ol class="flow">
+    <li><b>Box scores</b><span>Jogadores e times de 30 temporadas (Kaggle).</span><span class="k">786.814 linhas · 38.023 jogos</span></li>
+    <li><b>Limpeza e conferência</b><span>Pré-temporada e All-Star removidos; divergências resolvidas pela súmula oficial e pelo Basketball-Reference.</span><span class="k">157 valores corrigidos · 12 jogos incluídos</span></li>
+    <li><b>Consistência</b><span>Soma dos jogadores conferida contra o total do time em cada jogo.</span><span class="k">100% dos jogos batem</span></li>
+    <li><b>Lista de lesionados</b><span>Transações da Pro Sports Transactions (três cópias públicas), ligadas por nome com tabela de apelidos.</span><span class="k">35.180 registros</span></li>
+    <li><b>Afastamentos</b><span>Episódios montados da colocação na lista até a volta, validados contra o Basketball-Reference.</span><span class="k">18.434 episódios · 36 de 40 confirmados</span></li>
+    <li><b>Estilo de jogo</b><span>Distância dos arremessos, AST%, STL%, BLK%, DRB% e DBPM por jogador-temporada.</span><span class="k">12.897 linhas · 99,85% ligadas</span></li>
+  </ol>
+</section>
+
+<section id="alvo">
+  <h2><span class="n">03</span>Como a variável de lesão foi construída</h2>
+  <p>A fonte registra eventos (“colocado na lista”, “ativado”), não lesões. Transformar eventos em episódios exigiu regras explícitas, testadas em casos conhecidos como Derrick Rose, Kevin Durant, John Wall e Kawhi Leonard.</p>
+  <div class="two">
+    <div class="box"><h3>Regras do episódio</h3>
+      <ul class="list">
+        <li>Começa na colocação na lista de lesionados.</li>
+        <li>Termina na primeira volta: ativação, nova colocação ou primeiro jogo disputado (quando o registro de volta falta).</li>
+        <li>Só atravessa temporadas se o jogador estava na liga; anos fora da NBA não contam como lesão.</li>
+        <li>Datas da bolha de 2020 pertencem à temporada 2019-20.</li>
+      </ul></div>
+    <div class="box"><h3>Classificação do motivo</h3>
+      <ul class="list">
+        <li><b>Ligamento</b>: rupturas, Aquiles, menisco, tendinites e cartilagem.</li>
+        <li><b>Muscular</b>: estiramentos, contraturas, cãibras.</li>
+        <li><b>Fratura</b> e <b>Contusão</b> (batidas, dores, concussão).</li>
+        <li>Doença, COVID, descanso e motivos pessoais ficam fora do estudo.</li>
+      </ul></div>
+  </div>
+  <div class="box"><div class="chart" id="cCat"></div>
+    <p class="cap">Afastamentos com pelo menos um jogo perdido, por categoria. 28% não informam diagnóstico e entram só nas análises de total.</p></div>
+</section>
+
+<section id="metodos">
+  <h2><span class="n">04</span>Desenho das análises</h2>
+  <p>Cada pergunta usa a unidade em que o efeito acontece. Os modelos padronizam variáveis dentro da temporada e agrupam o erro padrão por jogador, porque o mesmo atleta aparece várias vezes.</p>
+  <div class="tbl box" style="padding:6px 14px">
+    <table>
+      <thead><tr><th>Pergunta</th><th>Unidade</th><th class="num">n</th><th>Modelo</th><th>Controles</th></tr></thead>
+      <tbody>
+        <tr><td>Uso alto</td><td>Jogador-temporada, uso &gt; 20%</td><td class="num">2.773</td><td>OLS, efeito fixo de temporada</td><td>Minutos por jogo, pace, lesões nas 3 temporadas anteriores</td></tr>
+        <tr><td>Ritmo do time</td><td>Time-temporada</td><td class="num">600</td><td>Spearman bruto e com z na temporada; OLS</td><td>Temporada</td></tr>
+        <tr><td>Recorrência</td><td>Jogador-temporada × parte do corpo</td><td class="num">16 partes</td><td>Logit</td><td>Minutos, parte do corpo, temporada</td></tr>
+        <tr><td>Estilo de jogo</td><td>Jogador-temporada (≥ 20 jogos, ≥ 15 min)</td><td class="num">5.288</td><td>K-means (k = 6) + Poisson com exposição em minutos</td><td>Uso, pace, histórico, posição, temporada</td></tr>
+        <tr><td>Jogo da lesão</td><td>Jogador-jogo</td><td class="num">392.257</td><td>Logit condicional por jogador-temporada</td><td>Jogos em 7 dias, jogos seguidos, mando, prorrogação</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="tempo">
+  <h2><span class="n">05</span>A armadilha da tendência histórica</h2>
+  <p>O ritmo da liga subiu cerca de 7 posses por jogo desde 2006-07. No mesmo período, o número de afastamentos registrados mais que dobrou, em parte porque os times passaram a registrar mais (gestão de carga, regras de lista). Comparando todos os times de todas as temporadas, ritmo e lesões parecem muito ligados.</p>
+  <div class="box"><div class="legend"><span><i style="background:var(--orange)"></i>Lesões por time (a cada 82 jogos)</span><span><i style="background:var(--blue)"></i>Pace médio da liga</span></div>
+    <div class="chart" id="cTempo"></div>
+    <p class="cap">Índice com 2006-07 = 100. Pace médio da liga e lesões por time a cada 82 jogos.</p></div>
+  <div class="two">
+    <div class="box"><span class="eyebrow">Correlação bruta</span><span class="stat" style="color:var(--orange)">ρ = 0,52</span><p class="small">Todos os 600 times-temporada juntos.</p></div>
+    <div class="box"><span class="eyebrow">Dentro da mesma temporada</span><span class="stat" style="color:var(--blue)">ρ = −0,04</span><p class="small">Ritmo e lesões em z-score dentro de cada temporada. A relação desaparece.</p></div>
+  </div>
+  <p class="take">Lição de método: duas séries que sobem juntas no tempo se correlacionam mesmo sem relação causal. Por isso todas as análises seguintes comparam dentro da temporada.</p>
+</section>
+
+<section id="recorrencia">
+  <h2><span class="n">06</span>O melhor preditor é a lesão anterior</h2>
+  <p>Para cada jogador-temporada e parte do corpo, comparei o risco de lesão naquele local entre quem teve e quem não teve lesão ali nas três temporadas anteriores.</p>
+  <div class="box"><div class="chart" id="cRec"></div>
+    <p class="cap">Risco relativo de lesão na mesma parte do corpo (com histórico ÷ sem histórico). A linha marca 1, risco igual.</p></div>
+  <p class="take">Média de todas as partes: 4,2% sem histórico contra 16,1% com histórico. Controlando minutos, parte e temporada, o odds ratio é 2,1. O tendão de Aquiles tem a maior recorrência relativa (7×).</p>
+</section>
+
+<section id="uso">
+  <h2><span class="n">07</span>Uso alto: um efeito que era histórico</h2>
+  <p>Entre jogadores com usage rate médio acima de 20%, quem mais usa a posse perde mais jogos. Mas esses jogadores também chegam com mais lesões anteriores (correlação de 0,22 entre uso e lesões nas três temporadas anteriores).</p>
+  <div class="two">
+    <div class="box"><span class="eyebrow">Sem controlar histórico</span><span class="stat">+0,28 pp</span><p class="small">de jogos perdidos por ponto de uso (p = 0,005)</p></div>
+    <div class="box"><span class="eyebrow">Controlando lesões anteriores</span><span class="stat">+0,14 pp</span><p class="small">p = 0,19, sem significância. Cada lesão anterior soma +0,85 pp.</p></div>
+  </div>
+  <p class="take">O uso alto marca jogadores com histórico de lesão; ele não aumenta o risco por si.</p>
+</section>
+
+<section id="estilo">
+  <h2><span class="n">08</span>Estilo de jogo</h2>
+  <p>Posição (G/F/C) descreve pouco como um jogador atua. Agrupei os jogadores-temporada por dez métricas de estilo, padronizadas dentro da temporada porque o jogo mudou muito (a bola de 3 explodiu no período). Usei K-means com k = 6: a silhueta favorecia k = 4 por pouco (0,20 contra 0,16), mas com 4 grupos estilos claramente diferentes se misturavam.</p>
+  <div class="box"><div class="legend"><span><i style="background:var(--blue)"></i>Abaixo da média da temporada</span><span><i style="background:var(--neutral)"></i>Na média</span><span><i style="background:var(--orange)"></i>Acima da média</span></div>
+    <div class="chart" id="cCent"></div>
+    <p class="cap">Centróides dos grupos em desvios-padrão. Exemplos: Pivô de aro (Dwight Howard, Rudy Gobert), Armador criador (James Harden), Arremessador de 3 (Klay Thompson, Ray Allen), Defensor de perímetro (Andre Iguodala).</p></div>
+  <h3>Risco total por estilo</h3>
+  <div class="box"><div class="legend"><span><i style="background:var(--orange)"></i>Intervalo de 95% não inclui 1</span><span><i style="background:var(--blue)"></i>Inclui 1 (sem diferença clara)</span></div>
+    <div class="chart" id="cEstilo"></div>
+    <p class="cap">Razão de taxas de lesão por minuto contra o Arremessador de 3 (Poisson com exposição em minutos, controlando uso, pace, lesões anteriores, posição e temporada). Barras: intervalo de 95%.</p></div>
+  <h3>Tipo e local da lesão por estilo</h3>
+  <div class="box"><div class="chart" id="cIdx"></div>
+    <p class="cap">Taxa por 1.000 minutos dividida pela média da liga (1,00 = média). Laranja: acima da média; azul: abaixo.</p></div>
+  <p class="take">O estilo pesa mais no tipo de lesão do que no total. O Pivô de aro concentra contusões, fraturas e lesões de pé e tornozelo; o Armador criador tem 1,8× a média em posterior da coxa. No modelo único, cada lesão nas três temporadas anteriores soma 9% ao risco, enquanto uso (−4%) e pace (+1%) não têm efeito.</p>
+</section>
+
+<section id="jogo">
+  <h2><span class="n">09</span>O jogo da lesão: carga e contato</h2>
+  <p>Aqui a unidade é o jogo. O jogo da lesão é o último disputado até três dias antes da entrada na lista (6.603 dos 10.659 afastamentos se ligam a um jogo; os demais surgiram em treinos ou fora da temporada). O logit condicional compara esse jogo com os outros jogos do próprio jogador na mesma temporada, então perfil, idade e estilo ficam constantes.</p>
+  <div class="box"><div class="chart" id="cAnt"></div>
+    <p class="cap">Lesões por 1.000 jogos conforme os minutos do jogo anterior, em desvios-padrão da média do jogador na temporada.</p></div>
+  <div class="box"><div class="legend"><span><i style="background:var(--orange)"></i>Intervalo de 95% não inclui 1</span><span><i style="background:var(--blue)"></i>Inclui 1</span></div>
+    <div class="chart" id="cOR"></div>
+    <p class="cap">Odds ratios do logit condicional. Defesa física = média em z de faltas por 100 posses, lances livres cedidos e tocos do adversário na temporada.</p></div>
+  <div class="tbl box" style="padding:6px 14px">
+    <table><thead><tr><th>Categoria</th><th class="num">Defesa física (por DP)</th><th class="num">Jogo &gt; 1 DP na semana</th></tr></thead><tbody id="tCat"></tbody></table>
+  </div>
+  <p class="take">Uma semana com um jogo bem acima dos minutos habituais eleva o risco, sobretudo de ligamento e contusão. A defesa física do adversário não muda o total, mas aparece em lesões musculares e fraturas. O efeito “protetor” de jogos seguidos é seleção: técnicos poupam os jogadores mais frágeis nesses jogos.</p>
+</section>
+
+<section id="limites">
+  <h2><span class="n">10</span>Limitações</h2>
+  <ul class="list">
+    <li>O estudo é observacional: mostra associações. Decisões de técnicos (poupar, aumentar minutos) interferem nos dois lados.</li>
+    <li>A data de entrada na lista nem sempre é o dia da lesão, e lesões de treino não se ligam a um jogo.</li>
+    <li>O registro de lesões mudou ao longo do tempo; a comparação dentro da temporada reduz, mas não elimina, esse viés.</li>
+    <li>Foram feitos muitos testes por categoria e parte do corpo. Resultados isolados com p entre 0,01 e 0,05 (como fraturas, com 178 casos) pedem confirmação.</li>
+    <li>Box scores não medem carga física real (distância, acelerações, saltos).</li>
+  </ul>
+</section>
+
+<section id="proximos">
+  <h2><span class="n">11</span>Próximos passos</h2>
+  <ul class="list">
+    <li>Modelo de sobrevivência (Cox) para o tempo até a próxima lesão, com covariáveis que mudam jogo a jogo.</li>
+    <li>Modelo preditivo de risco semanal com validação temporal (treino até 2021-22, teste nas temporadas seguintes), avaliado por AUC e calibração.</li>
+    <li>Dados de rastreamento da NBA (distância percorrida e velocidade) como medida de carga mais fiel que minutos.</li>
+    <li>Correção para múltiplos testes (Benjamini-Hochberg) nas análises por categoria e parte do corpo.</li>
+  </ul>
+  <div class="box"><h3>Estrutura do projeto</h3>
+<pre class="tree">nba-lesoes/
+├── 01_limpeza/        box scores: limpeza, súmulas, estatísticas avançadas
+├── 02_lesoes/         lista de lesionados: ligação, episódios, categorias
+├── 03_analises/       uso e pace, recorrência, estilo, jogo da lesão
+├── 04_resultados/     NBA_Lesoes_Estudo_Resultados.xlsx (13 abas)
+└── README.md          perguntas, método, resultados e como reproduzir</pre></div>
+</section>
+
+<footer>
+  <span>Marcus Lima · estudo de portfólio em ciência de dados · novembro de 2026</span>
+  <span>Fontes: box scores da NBA (Kaggle), súmulas oficiais da NBA, Basketball-Reference, Pro Sports Transactions (cópias públicas).</span>
+</footer>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const D = {"porTemporada": {"temporadas": ["2006-07", "2007-08", "2008-09", "2009-10", "2010-11", "2011-12", "2012-13", "2013-14", "2014-15", "2015-16", "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22", "2022-23", "2023-24", "2024-25", "2025-26"], "afastamentos": [421, 349, 358, 330, 406, 266, 275, 281, 359, 322, 407, 554, 560, 627, 666, 879, 788, 908, 857, 1046]}, "categorias": {"nomes": ["Lesão sem diagnóstico", "Ligamento", "Contusão (batidas)", "Muscular", "Fratura"], "afastamentos": [3014, 2549, 2502, 2166, 428], "jogos": [23180, 24357, 12323, 12857, 8293]}, "uso": {"faixas": ["20-24%", "24-28%", "28-32%", "32%+"], "pct": [8.7, 10.9, 14.1, 13.2]}, "usoCoef": {"sem": 0.284, "p_sem": 0.0055, "com": 0.144, "p_com": 0.188, "hist": 0.847}, "recorrencia": {"partes": ["Tendão de Aquiles", "Perna", "Dedo do pé", "Posterior da coxa", "Quadríceps", "Virilha", "Panturrilha", "Quadril", "Costas", "Punho", "Ombro", "Joelho", "Pé", "Mão / dedo", "Tornozelo", "Cabeça / concussão"], "rr": [7.07, 4.67, 4.48, 3.82, 3.52, 3.49, 3.48, 2.97, 2.42, 2.4, 2.4, 2.33, 1.83, 1.82, 1.61, 1.58]}, "paceTempo": {"temporadas": ["2006-07", "2007-08", "2008-09", "2009-10", "2010-11", "2011-12", "2012-13", "2013-14", "2014-15", "2015-16", "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22", "2022-23", "2023-24", "2024-25", "2025-26"], "pace": [92.9, 93.5, 92.8, 93.6, 92.9, 92.3, 93.0, 94.8, 94.7, 96.6, 97.0, 98.0, 100.7, 100.8, 99.8, 98.8, 99.8, 99.2, 99.6, 100.2], "lesoes": [14.0, 11.6, 11.9, 11.0, 13.5, 11.0, 9.2, 9.4, 12.0, 10.7, 13.6, 18.5, 18.7, 24.2, 25.3, 29.3, 26.3, 30.3, 28.6, 34.9]}, "paceCor": {"bruto": 0.52, "z": -0.04}, "estiloRR": {"nomes": ["Armador criador", "Defensor de perímetro", "Interno de garrafão", "Pivô de aro", "Pontuador de média distância"], "rr": [1.09, 1.11, 1.19, 1.34, 1.06], "inf": [0.95, 0.98, 1.04, 1.1, 0.95], "sup": [1.26, 1.25, 1.36, 1.64, 1.19]}, "estiloIdx": [{"estilo": "Armador criador", "Ligamento": 1.05, "Muscular": 1.28, "Fratura": 0.93, "Contusão (batidas)": 1.15, "Joelho": 1.05, "Tornozelo": 1.21, "Pé": 1.12, "Posterior da coxa": 1.81, "Ombro": 0.94, "Costas": 0.78}, {"estilo": "Arremessador de 3", "Ligamento": 0.91, "Muscular": 0.84, "Fratura": 0.82, "Contusão (batidas)": 0.83, "Joelho": 0.92, "Tornozelo": 0.89, "Pé": 0.97, "Posterior da coxa": 0.91, "Ombro": 0.98, "Costas": 0.93}, {"estilo": "Defensor de perímetro", "Ligamento": 0.93, "Muscular": 1.07, "Fratura": 0.66, "Contusão (batidas)": 0.91, "Joelho": 1.08, "Tornozelo": 0.8, "Pé": 0.69, "Posterior da coxa": 0.75, "Ombro": 1.51, "Costas": 0.96}, {"estilo": "Interno de garrafão", "Ligamento": 1.05, "Muscular": 0.83, "Fratura": 1.27, "Contusão (batidas)": 1.09, "Joelho": 1.05, "Tornozelo": 0.95, "Pé": 0.94, "Posterior da coxa": 0.52, "Ombro": 0.92, "Costas": 1.34}, {"estilo": "Pivô de aro", "Ligamento": 1.13, "Muscular": 0.9, "Fratura": 1.51, "Contusão (batidas)": 1.15, "Joelho": 1.22, "Tornozelo": 1.37, "Pé": 1.42, "Posterior da coxa": 0.81, "Ombro": 0.98, "Costas": 0.9}, {"estilo": "Pontuador de média distância", "Ligamento": 0.99, "Muscular": 1.03, "Fratura": 1.01, "Contusão (batidas)": 0.95, "Joelho": 0.86, "Tornozelo": 0.95, "Pé": 1.01, "Posterior da coxa": 0.99, "Ombro": 0.85, "Costas": 1.02}], "estiloHist": [{"faixaHist": "Sem lesão (3 temp.)", "Armador criador": 0.52, "Arremessador de 3": 0.43, "Defensor de perímetro": 0.43, "Interno de garrafão": 0.57, "Pivô de aro": 0.55, "Pontuador de média distância": 0.51}, {"faixaHist": "1-2 lesões", "Armador criador": 0.68, "Arremessador de 3": 0.6, "Defensor de perímetro": 0.7, "Interno de garrafão": 0.56, "Pivô de aro": 0.68, "Pontuador de média distância": 0.67}, {"faixaHist": "3+ lesões", "Armador criador": 1.34, "Arremessador de 3": 1.27, "Defensor de perímetro": 1.44, "Interno de garrafão": 1.26, "Pivô de aro": 1.58, "Pontuador de média distância": 1.26}], "modelo": {"hist3": [1.089, 0.0], "uso_z": [0.959, 0.073], "pace_z": [1.009, 0.5542]}, "jogoAnt": {"faixas": ["<-1", "-1 a 0", "0 a 1", "1 a 2", ">2"], "taxa": [15.45, 16.19, 17.73, 17.87, 18.3]}, "jogoOR": {"adv_contato": [1.016, 0.991, 1.042], "pesado1dp_7d": [1.121, 1.061, 1.186], "jogos7d": [1.071, 1.044, 1.099], "b2b": [0.817, 0.76, 0.878], "casa": [0.984, 0.936, 1.034], "prorrogacao": [1.208, 1.09, 1.339], "pesado2dp_7d": [1.204, 1.061, 1.366]}, "contatoCat": {"Ligamento": [0.966, 0.194, 1.191, 0.004], "Muscular": [1.08, 0.006, 1.043, 0.523], "Fratura": [1.19, 0.024, 1.114, 0.539], "Contusão (batidas)": [1.028, 0.276, 1.185, 0.003]}, "jogoN": {"jogos": 392257, "lesoes": 6603}, "cent": {"avg_dist": [0.02, -1.96, -0.85, 0.29, 0.15, 1.11], "pct_fga_00_03": [0.08, 2.23, 0.57, -0.36, -0.3, -0.84], "pct_fga_dunk": [-0.11, 2.53, 0.4, -0.35, -0.54, -0.5], "pct_fga_fg3a": [0.11, -1.54, -0.92, 0.17, -0.09, 1.26], "ast_pct": [-0.04, -0.78, -0.41, -0.15, 1.66, -0.42], "usg_pct": [-0.56, -0.82, 0.18, 0.28, 1.16, -0.68], "stl_pct": [1.36, -0.38, -0.4, -0.5, 0.52, -0.24], "blk_pct": [-0.05, 1.77, 0.84, -0.52, -0.54, -0.43], "drb_pct": [-0.24, 1.3, 1.05, -0.4, -0.41, -0.54], "dbpm": [1.03, 0.75, 0.2, -0.87, -0.15, -0.06]}};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const tip = document.getElementById('tip');
+const fmt = (x, d = 2) => Number(x).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+function hover(el, html) {
+  el.addEventListener('mousemove', e => { tip.innerHTML = html; tip.hidden = false; const w = tip.offsetWidth; tip.style.left = Math.min(e.clientX + 14, innerWidth - w - 8) + 'px'; tip.style.top = (e.clientY + 14) + 'px'; });
+  el.addEventListener('mouseleave', () => tip.hidden = true);
+}
+const NS = 'http://www.w3.org/2000/svg';
+function svg(id, w, h) { const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', `0 0 ${w} ${h}`); s.setAttribute('role', 'img'); document.getElementById(id).appendChild(s); return s; }
+function el(s, tag, a, txt) { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; s.appendChild(e); return e; }
+function rbar(x, y, w, h, r) { r = Math.min(r, w, h / 2); return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`; }
+function vbar(x, y, w, h, r) { r = Math.min(r, h, w / 2); return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`; }
+
+// horizontal bars
+function hbars(id, labels, vals, opt) {
+  const L = opt.left || 170, W = 760, rh = 26, top = 8, H = top + labels.length * rh + 28;
+  const s = svg(id, W, H), max = opt.max || Math.max(...vals) * 1.08, x = v => L + v / max * (W - L - 60);
+  (opt.ticks || []).forEach(t => { el(s, 'line', { x1: x(t), x2: x(t), y1: top, y2: H - 22, stroke: css('--line') }); el(s, 'text', { x: x(t), y: H - 6, 'text-anchor': 'middle' }, opt.tickFmt ? opt.tickFmt(t) : t); });
+  labels.forEach((l, i) => {
+    const y = top + i * rh; el(s, 'text', { x: L - 10, y: y + rh / 2 + 4, 'text-anchor': 'end', class: 'ink' }, l);
+    const p = el(s, 'path', { d: rbar(L, y + 4, Math.max(1, x(vals[i]) - L), rh - 8, 4), fill: opt.color ? opt.color(vals[i], i) : css('--blue') });
+    el(s, 'text', { x: x(vals[i]) + 6, y: y + rh / 2 + 4, class: 'v' }, opt.valFmt ? opt.valFmt(vals[i]) : vals[i]);
+    hover(p, opt.tip ? opt.tip(i) : `${l}: ${vals[i]}`);
+  });
+  if (opt.ref != null) el(s, 'line', { x1: x(opt.ref), x2: x(opt.ref), y1: top - 4, y2: H - 22, stroke: css('--ink'), 'stroke-width': 1.5, 'stroke-dasharray': '4 3' });
+}
+
+// categorias
+hbars('cCat', D.categorias.nomes, D.categorias.afastamentos, { left: 180, ticks: [0, 1000, 2000, 3000], tickFmt: t => t.toLocaleString('pt-BR'),
+  valFmt: v => v.toLocaleString('pt-BR'), tip: i => `<b>${D.categorias.nomes[i]}</b><br>${D.categorias.afastamentos[i].toLocaleString('pt-BR')} afastamentos<br>${D.categorias.jogos[i].toLocaleString('pt-BR')} jogos perdidos` });
+
+// tendência indexada
+(function () {
+  const T = D.paceTempo, n = T.temporadas.length, W = 760, H = 300, l = 44, r = 20, t = 16, b = 34;
+  const ip = T.pace.map(v => v / T.pace[0] * 100), il = T.lesoes.map(v => v / T.lesoes[0] * 100);
+  const max = 260, min = 50, x = i => l + i * (W - l - r) / (n - 1), y = v => t + (max - v) / (max - min) * (H - t - b);
+  const s = svg('cTempo', W, H);
+  [50, 100, 150, 200, 250].forEach(v => { el(s, 'line', { x1: l, x2: W - r, y1: y(v), y2: y(v), stroke: css('--line') }); el(s, 'text', { x: l - 8, y: y(v) + 4, 'text-anchor': 'end' }, v); });
+  T.temporadas.forEach((tt, i) => { if (i % 3 === 0 || i === n - 1) el(s, 'text', { x: x(i), y: H - 12, 'text-anchor': 'middle' }, tt); });
+  [[ip, css('--blue'), 'Pace', T.pace], [il, css('--orange'), 'Lesões por time', T.lesoes]].forEach(([arr, c, nome, raw]) => {
+    el(s, 'path', { d: arr.map((v, i) => (i ? 'L' : 'M') + x(i) + ',' + y(v)).join(''), fill: 'none', stroke: c, 'stroke-width': 2 });
+    el(s, 'circle', { cx: x(n - 1), cy: y(arr[n - 1]), r: 4, fill: c, stroke: css('--surface'), 'stroke-width': 2 });
+    el(s, 'text', { x: x(n - 1) - 8, y: y(arr[n - 1]) - 10, 'text-anchor': 'end', class: 'ink' }, `${nome} ${Math.round(arr[n - 1])}`);
+  });
+  T.temporadas.forEach((tt, i) => { const hit = el(s, 'rect', { x: x(i) - (W - l - r) / (n - 1) / 2, y: t, width: (W - l - r) / (n - 1), height: H - t - b, fill: 'transparent' });
+    hover(hit, `<b>${tt}</b><br>Pace: ${fmt(T.pace[i], 1)}<br>Lesões por time: ${fmt(T.lesoes[i], 1)}`); });
+})();
+
+// recorrência
+hbars('cRec', D.recorrencia.partes, D.recorrencia.rr, { left: 150, max: 7.6, ticks: [1, 2, 3, 4, 5, 6, 7], tickFmt: t => t + '×', ref: 1, valFmt: v => fmt(v) + '×',
+  tip: i => `<b>${D.recorrencia.partes[i]}</b><br>Risco ${fmt(D.recorrencia.rr[i])}× maior com lesão anterior no local` });
+
+// heatmap genérico (divergente azul-cinza-laranja)
+function mix(a, b, t) { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; }
+function heat(id, rows, cols, val, opt) {
+  const L = opt.left || 190, cw = opt.cw || 56, rh = 34, top = 44, W = L + cols.length * cw + 4, H = top + rows.length * rh + 4, s = svg(id, W, H);
+  s.querySelector || 0; document.getElementById(id).querySelector('svg').style.minWidth = Math.min(W, 640) + 'px';
+  cols.forEach((c, j) => { const tx = L + j * cw + cw / 2; el(s, 'text', { x: tx, y: top - 10, 'text-anchor': 'middle', class: 'ink', 'font-size': 11 }, c); });
+  rows.forEach((rname, i) => {
+    el(s, 'text', { x: L - 10, y: top + i * rh + rh / 2 + 4, 'text-anchor': 'end', class: 'ink' }, rname);
+    cols.forEach((c, j) => {
+      const v = val(i, j), t = Math.max(-1, Math.min(1, opt.scale(v)));
+      const fill = t >= 0 ? mix(css('--neutral'), css('--orange'), t) : mix(css('--neutral'), css('--blue'), -t);
+      const r = el(s, 'rect', { x: L + j * cw + 1, y: top + i * rh + 1, width: cw - 2, height: rh - 2, rx: 3, fill });
+      el(s, 'text', { x: L + j * cw + cw / 2, y: top + i * rh + rh / 2 + 4, 'text-anchor': 'middle', class: 'v', style: `fill:${Math.abs(t) > .55 ? '#fff' : css('--ink')}` }, opt.fmt(v));
+      hover(r, `<b>${rname}</b><br>${c}: ${opt.fmt(v)}`);
+    });
+  });
+}
+const NOMES = ['Defensor de perímetro', 'Pivô de aro', 'Interno de garrafão', 'Pontuador de média distância', 'Armador criador', 'Arremessador de 3'];
+const CK = ['avg_dist', 'pct_fga_00_03', 'pct_fga_dunk', 'pct_fga_fg3a', 'ast_pct', 'usg_pct', 'stl_pct', 'blk_pct', 'drb_pct', 'dbpm'];
+const CL = ['Distância', 'No aro', 'Enterradas', 'De 3', 'AST%', 'USG%', 'STL%', 'BLK%', 'DRB%', 'DBPM'];
+heat('cCent', NOMES, CL, (i, j) => D.cent[CK[j]][i], { left: 200, cw: 58, scale: v => v / 2, fmt: v => (v > 0 ? '+' : '') + fmt(v, 1) });
+
+// forest plot
+function forest(id, labels, est, lo, hi, opt) {
+  const L = opt.left || 230, W = 760, rh = 30, top = 10, H = top + labels.length * rh + 30, min = opt.min, max = opt.max;
+  const s = svg(id, W, H), x = v => L + (v - min) / (max - min) * (W - L - 70);
+  opt.ticks.forEach(t => { el(s, 'line', { x1: x(t), x2: x(t), y1: top, y2: H - 24, stroke: css('--line') }); el(s, 'text', { x: x(t), y: H - 8, 'text-anchor': 'middle' }, fmt(t, 1)); });
+  el(s, 'line', { x1: x(1), x2: x(1), y1: top - 4, y2: H - 24, stroke: css('--ink'), 'stroke-width': 1.5, 'stroke-dasharray': '4 3' });
+  labels.forEach((l, i) => {
+    const y = top + i * rh + rh / 2, sig = lo[i] > 1 || hi[i] < 1, c = sig ? css('--orange') : css('--blue');
+    el(s, 'text', { x: L - 12, y: y + 4, 'text-anchor': 'end', class: 'ink' }, l);
+    el(s, 'line', { x1: x(lo[i]), x2: x(hi[i]), y1: y, y2: y, stroke: c, 'stroke-width': 2 });
+    const d = el(s, 'circle', { cx: x(est[i]), cy: y, r: 6, fill: c, stroke: css('--surface'), 'stroke-width': 2 });
+    el(s, 'text', { x: x(hi[i]) + 8, y: y + 4, class: 'v' }, fmt(est[i]));
+    const hit = el(s, 'rect', { x: L, y: y - rh / 2, width: W - L, height: rh, fill: 'transparent' });
+    hover(hit, `<b>${l}</b><br>${opt.nome}: ${fmt(est[i])}<br>IC 95%: ${fmt(lo[i])} a ${fmt(hi[i])}`);
+  });
+}
+const E = D.estiloRR, ord = E.rr.map((v, i) => i).sort((a, b) => E.rr[a] - E.rr[b]);
+forest('cEstilo', ['Arremessador de 3 (referência)', ...ord.map(i => E.nomes[i])], [1, ...ord.map(i => E.rr[i])], [1, ...ord.map(i => E.inf[i])], [1, ...ord.map(i => E.sup[i])],
+  { min: 0.8, max: 1.7, ticks: [0.8, 1, 1.2, 1.4, 1.6], nome: 'Razão de taxas', left: 240 });
+
+// índice por tipo
+const IC = ['Ligamento', 'Muscular', 'Fratura', 'Contusão (batidas)', 'Joelho', 'Tornozelo', 'Pé', 'Posterior da coxa', 'Ombro', 'Costas'];
+const IL = ['Ligam.', 'Muscular', 'Fratura', 'Contusão', 'Joelho', 'Tornoz.', 'Pé', 'Post. coxa', 'Ombro', 'Costas'];
+const IR = D.estiloIdx;
+heat('cIdx', IR.map(r => r.estilo), IL, (i, j) => IR[i][IC[j]], { left: 200, cw: 62, scale: v => (v - 1) / 0.6, fmt: v => fmt(v) });
+
+// jogo anterior
+(function () {
+  const A = D.jogoAnt, W = 760, H = 260, l = 50, b = 40, t = 16, s = svg('cAnt', W, H), max = 20, n = A.taxa.length, bw = (W - l - 20) / n;
+  const lab = ['< −1 DP', '−1 a 0', '0 a +1', '+1 a +2', '> +2 DP'];
+  [0, 5, 10, 15, 20].forEach(v => { const y = t + (max - v) / max * (H - t - b); el(s, 'line', { x1: l, x2: W - 20, y1: y, y2: y, stroke: css('--line') }); el(s, 'text', { x: l - 8, y: y + 4, 'text-anchor': 'end' }, v); });
+  A.taxa.forEach((v, i) => { const h = v / max * (H - t - b), x0 = l + i * bw + bw * 0.22, w = bw * 0.56;
+    const p = el(s, 'path', { d: vbar(x0, H - b - h, w, h, 4), fill: i >= 3 ? css('--orange') : css('--blue') });
+    el(s, 'text', { x: x0 + w / 2, y: H - b - h - 8, 'text-anchor': 'middle', class: 'v' }, fmt(v, 1));
+    el(s, 'text', { x: x0 + w / 2, y: H - 14, 'text-anchor': 'middle', class: 'ink' }, lab[i]);
+    hover(p, `<b>Jogo anterior ${lab[i]}</b><br>${fmt(v, 2)} lesões por 1.000 jogos`); });
+})();
+
+// odds ratios do jogo
+const OR = D.jogoOR, OK = ['pesado2dp_7d', 'prorrogacao', 'pesado1dp_7d', 'jogos7d', 'adv_contato', 'casa', 'b2b'];
+const ON = { pesado2dp_7d: 'Jogo > 2 DP de minutos na semana', prorrogacao: 'Jogo com prorrogação', pesado1dp_7d: 'Jogo > 1 DP de minutos na semana', jogos7d: 'Cada jogo a mais na semana',
+  adv_contato: 'Defesa física do adversário (+1 DP)', casa: 'Jogo em casa', b2b: 'Segundo jogo em dias seguidos' };
+forest('cOR', OK.map(k => ON[k]), OK.map(k => OR[k][0]), OK.map(k => OR[k][1]), OK.map(k => OR[k][2]), { min: 0.7, max: 1.4, ticks: [0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4], nome: 'Odds ratio', left: 260 });
+
+// tabela por categoria
+const tb = document.getElementById('tCat');
+Object.entries(D.contatoCat).forEach(([c, v]) => { const f = (o, p) => `${fmt(o)}${p < 0.05 ? ' <span class="pill ok">p ' + (p < 0.01 ? '&lt; 0,01' : fmt(p, 3)) + '</span>' : ' <span class="small">(p ' + fmt(p, 2) + ')</span>'}`;
+  tb.insertAdjacentHTML('beforeend', `<tr><td>${c}</td><td class="num">${f(v[0], v[1])}</td><td class="num">${f(v[2], v[3])}</td></tr>`); });
+</script>
